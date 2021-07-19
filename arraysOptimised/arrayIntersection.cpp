@@ -45,23 +45,52 @@ void mergeSort(int *arr, int si, int ei) {
     merge(arr, si, midIndex, ei);
 }
 
+void printArray(int *arr, int size) {
+    for(int i = 0; i < size; i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+}
+
 int findIntersection(int *arr1, int size1, int *arr2, int size2 , int *outputArr, int smallerSize) {
     mergeSort(arr1, 0, size1 - 1);
     mergeSort(arr2, 0, size2 - 1);
+    printArray(arr1, size1);
+    printArray(arr2, size2);
     int i = 0;
     int j = 0;
     int k = 0;
-    for(int i = 0; i < size2; i++) {
-        if(arr2[i] < arr1[j]) {
-            i++; 
-        } else if(arr2[i] > arr1[j]) {
-            j++;
-        } else {
+    string limit = size1 < size2 ? "array1" : "array2";
+    if(limit == "array2") {
+        int *temp = arr1;
+        arr1 = arr2;
+        arr2 = temp;
+        int tempSize = size1;
+        size1 = size2;
+        size2 = tempSize;
+    }
+
+    printArray(arr1, size1);
+    printArray(arr2, size2);
+    for(i = 0; i < size1; i++) {
+        if(arr1[i] == arr2[j]) {
             outputArr[k] = arr1[i];
-            i++;
+            k++;
+            j++;
+            continue;
+        } else if(arr1[i] < arr2[j]) {
+            outputArr[k] = arr1[i];
+            k++;    
+        } else {
+            outputArr[k] = arr2[j];
             j++;
             k++;
+            i--;
         }
+    }
+    for(; j < size2; j++) {
+        outputArr[k] = arr2[j];
+        k++;
     }
     return k;
 }
